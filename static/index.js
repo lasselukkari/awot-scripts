@@ -17,7 +17,7 @@ fsp.readFile(settingFile, { encoding: 'utf8' })
       {
         type: 'input',
         name: 'sources',
-        message: 'Client source files dircetory',
+        message: 'Client source files directory',
         default: './build',
       },
       {
@@ -36,13 +36,13 @@ fsp.readFile(settingFile, { encoding: 'utf8' })
       {
         type: 'input',
         name: 'sketchDir',
-        message: 'Path to sketch folder',
-        default: './arduino/SketchFolder/',
+        message: 'Path to sketch directory',
+        default: './arduino/MyApp/',
       },
       {
         type: 'list',
         name: 'createSketch',
-        message: 'Generate Arduino main sketch file ?',
+        message: 'Generate Arduino sketch file',
         choices: ['Ethernet', 'Wifi', 'No'],
         default: 0,
         filter: value => value.toLowerCase(),
