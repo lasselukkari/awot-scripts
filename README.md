@@ -8,6 +8,8 @@ $ npm install awot-scripts -g
 ## awot-static
 Converts files to static gzipped payloads compatible with the aWOT web server library.
 ### Example usage: React app
+Preconditions: Latest [Arduino IDE](https://www.arduino.cc/en/Main/Software) is installed along with [aWOT library](https://github.com/lasselukkari/aWOT)  
+
 1. Install create-react-app and awot-scripts
 ```bash
 npm install -g create-react-app
