@@ -39,9 +39,8 @@ function readSource({ sources, indexFile }, filename) {
 
       return Promise.resolve({
         urlPath: relativePath !== indexFile ? relativePath : '',
-        contentType: mime.contentType(filename),
+        contentType: mime.contentType(path.extname(filename)),
         name: `static_${relativePath !== indexFile ? relativePath.toLowerCase().replace(/[^\w+$]/gi, '_') : 'index'}`,
-        payload: toHexPayload(zipped),
         payloads: chunks.map(chunk =>
           ({ chunkData: toHexPayload(chunk), chunkLength: chunk.length, chunkPart: (part += 1) })),
         length: zipped.length,
