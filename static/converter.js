@@ -12,22 +12,38 @@ function toHexPayload(data) {
     .match(/.{1,2}/g)
     .map(hex => ` 0x${hex}`)
     .toString()
-    .match(/.{1,66}/g)
+    .match(/.{1,72}/g)
     .map(line => `${line}\n`)
     .join('   ');
 }
 
+function makeChunks(buffer, chunkSize) {
+  const result = [];
+  const len = buffer.length;
+  let i = 0;
+
+  while (i < len) {
+    result.push(buffer.slice(i, i += chunkSize));
+  }
+
+  return result;
+}
+
 function readSource({ sources, indexFile }, filename) {
   return fsp.readFile(filename, { encoding: null })
-    .then((data) => {
-      const zipped = zlib.gzipSync(data);
+    .then((fileData) => {
+      const zipped = zlib.gzipSync(fileData);
       const relativePath = path.relative(sources, filename);
+      const chunks = makeChunks(zipped, 32767);
+      let part = 0;
 
       return Promise.resolve({
         urlPath: relativePath !== indexFile ? relativePath : '',
         mimeType: mime.lookup(filename),
         name: `static_${relativePath !== indexFile ? relativePath.toLowerCase().replace(/[^\w+$]/gi, '_') : 'index'}`,
         payload: toHexPayload(zipped),
+        payloads: chunks.map(chunk =>
+          ({ chunkData: toHexPayload(chunk), chunkLength: chunk.length, chunkPart: (part += 1) })),
         length: zipped.length,
       });
     });
@@ -57,15 +73,13 @@ function getSourcesFiles({ sources, exclude }) {
   });
 }
 
-function renderAsset({ name, payload, mimeType, length }) {
-  return `
-void ${name} (Request &req, Response &res) {
-  P(${name}) = {
-   ${payload}  };
+function renderAsset({ name, mimeType, payloads }) {
+  return `void ${name} (Request &req, Response &res) {
+${payloads.map(({ chunkData, chunkPart }) => `  P(${name}_${chunkPart}) = {\n   ${chunkData}  };`).join('\n')}
 
   res.set("Content-Encoding", "gzip");
   res.success("${mimeType}");
-  res.writeP(${name}, ${length});
+${payloads.map(({ chunkLength, chunkPart }) => `  res.writeP(${name}_${chunkPart}, ${chunkLength});`).join('\n')}
 }`;
 }
 
