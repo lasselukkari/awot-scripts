@@ -3,7 +3,7 @@ const zlib = require('zlib');
 
 const fsp = require('fs-extra');
 const mkdirp = require('mkdirp');
-const mime = require('mime');
+const mime = require('mime-types');
 const recursive = require('recursive-readdir');
 
 function toHexPayload(data) {
@@ -39,7 +39,7 @@ function readSource({ sources, indexFile }, filename) {
 
       return Promise.resolve({
         urlPath: relativePath !== indexFile ? relativePath : '',
-        mimeType: mime.lookup(filename),
+        contentType: mime.contentType(filename),
         name: `static_${relativePath !== indexFile ? relativePath.toLowerCase().replace(/[^\w+$]/gi, '_') : 'index'}`,
         payload: toHexPayload(zipped),
         payloads: chunks.map(chunk =>
@@ -73,12 +73,12 @@ function getSourcesFiles({ sources, exclude }) {
   });
 }
 
-function renderAsset({ name, mimeType, payloads }) {
+function renderAsset({ name, contentType, payloads }) {
   return `void ${name} (Request &req, Response &res) {
 ${payloads.map(({ chunkData, chunkPart }) => `  P(${name}_${chunkPart}) = {\n   ${chunkData}  };`).join('\n')}
 
   res.set("Content-Encoding", "gzip");
-  res.success("${mimeType}");
+  res.success("${contentType}");
 ${payloads.map(({ chunkLength, chunkPart }) => `  res.writeP(${name}_${chunkPart}, ${chunkLength});`).join('\n')}
 }`;
 }
