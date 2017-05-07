@@ -37,7 +37,7 @@ fsp.readFile(settingFile, { encoding: 'utf8' })
         type: 'input',
         name: 'sketchDir',
         message: 'Path to sketch directory',
-        default: './arduino/MyApp/',
+        default: './arduino/MyApp',
       },
       {
         type: 'list',

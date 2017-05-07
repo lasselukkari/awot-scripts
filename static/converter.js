@@ -104,7 +104,8 @@ function generateSketch({ createSketch, sketchDir }) {
     return Promise.resolve();
   }
 
-  const destination = `${sketchDir}/${sketchDir.split('/').pop()}.ino`;
+  const cleanedSketchDir = sketchDir.replace(/\/$/, '');
+  const destination = `${cleanedSketchDir}/${cleanedSketchDir.split('/').pop()}.ino`;
   const libName = createSketch === 'wifi' ? 'WiFi' : 'Ethernet';
   const vars = createSketch === 'wifi' ?
     'char ssid[] = "ssid";\nchar password[] = "pass";' :
