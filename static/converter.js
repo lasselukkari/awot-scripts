@@ -6,6 +6,8 @@ const mkdirp = require('mkdirp');
 const mime = require('mime-types');
 const recursive = require('recursive-readdir');
 
+const runDate = new Date();
+
 function toHexPayload(data) {
   return data
     .toString('hex')
@@ -72,11 +74,16 @@ function getSourcesFiles({ sources, exclude }) {
   });
 }
 
-function renderAsset({ name, contentType, payloads }) {
+function renderAsset({ name, contentType, payloads, length }) {
   return `void ${name} (Request &req, Response &res) {
 ${payloads.map(({ chunkData, chunkPart }) => `  P(${name}_${chunkPart}) = {\n   ${chunkData}  };`).join('\n')}
 
   res.set("Content-Encoding", "gzip");
+  res.set("Cache-Control", "public, max-age=31536000");
+  res.set("Content-Length", "${length}");
+  res.set("Last-Modified", "${runDate.toUTCString()}");
+  res.set("Vary", "Accept-Encoding");
+
   res.success("${contentType}");
 ${payloads.map(({ chunkLength, chunkPart }) => `  res.writeP(${name}_${chunkPart}, ${chunkLength});`).join('\n')}
 }`;
