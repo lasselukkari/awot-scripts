@@ -37,16 +37,16 @@ function readSource({ sources, indexFile }, filename) {
       const zipped = zlib.gzipSync(fileData);
       const relativePath = path.relative(sources, filename);
       const chunks = makeChunks(zipped, 32767);
-      let part = 0;
+      const isIndexFile = relativePath === indexFile;
 
       return Promise.resolve({
-        urlPath: relativePath !== indexFile ? relativePath : '',
+        urlPath: isIndexFile ? '' : relativePath,
         contentType: mime.contentType(path.extname(filename)),
-        name: `static_${relativePath !== indexFile ? relativePath.toLowerCase().replace(/[^\w+$]/gi, '_') : 'index'}`,
-        payloads: chunks.map(chunk =>
-          ({ chunkData: toHexPayload(chunk), chunkLength: chunk.length, chunkPart: (part += 1) })),
+        name: `static_${isIndexFile ? 'index' : relativePath.toLowerCase().replace(/[^\w+$]/gi, '_')}`,
+        payloads: chunks.map((chunk, index) =>
+          ({ chunkData: toHexPayload(chunk), chunkLength: chunk.length, chunkPart: index })),
         length: zipped.length,
-        cacheControl: indexFile ? 'no-cache' : 'public, max-age=31536000',
+        cacheControl: isIndexFile ? 'no-cache' : 'public, max-age=31536000',
       });
     });
 }
