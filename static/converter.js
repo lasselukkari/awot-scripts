@@ -46,6 +46,7 @@ function readSource({ sources, indexFile }, filename) {
         payloads: chunks.map(chunk =>
           ({ chunkData: toHexPayload(chunk), chunkLength: chunk.length, chunkPart: (part += 1) })),
         length: zipped.length,
+        cacheControl: indexFile ? 'no-cache' : 'public, max-age=31536000',
       });
     });
 }
@@ -74,12 +75,12 @@ function getSourcesFiles({ sources, exclude }) {
   });
 }
 
-function renderAsset({ name, contentType, payloads, length }) {
+function renderAsset({ name, contentType, payloads, length, cacheControl }) {
   return `void ${name} (Request &req, Response &res) {
 ${payloads.map(({ chunkData, chunkPart }) => `  P(${name}_${chunkPart}) = {\n   ${chunkData}  };`).join('\n')}
 
   res.set("Content-Encoding", "gzip");
-  res.set("Cache-Control", "public, max-age=31536000");
+  res.set("Cache-Control", "${cacheControl}");
   res.set("Content-Length", "${length}");
   res.set("Last-Modified", "${runDate.toUTCString()}");
   res.set("Vary", "Accept-Encoding");
