@@ -106,7 +106,7 @@ function generatePayloads({ sketchDir }, sourceOptions) {
   return writeFile(destination, payloads + router);
 }
 
-function generateSketch({ createSketch, sketchDir }) {
+function generateSketch({ createSketch = 'no', sketchDir }) {
   if (createSketch === 'no') {
     return Promise.resolve();
   }
