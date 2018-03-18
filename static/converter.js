@@ -41,7 +41,7 @@ function readSource({ sources, indexFile }, filename) {
 
       return Promise.resolve({
         urlPath: isIndexFile ? '' : relativePath,
-        contentType: mime.contentType(path.extname(filename)),
+        contentType: mime.contentType(path.extname(filename)) || 'application/octet-stream',
         name: `static_${isIndexFile ? 'index' : relativePath.toLowerCase().replace(/[^\w+$]/gi, '_')}`,
         payloads: chunks.map((chunk, index) =>
           ({ chunkData: toHexPayload(chunk), chunkLength: chunk.length, chunkPart: index })),
