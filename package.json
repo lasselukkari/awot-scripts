@@ -1,6 +1,6 @@
 {
   "name": "awot-scripts",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "",
   "main": "index.js",
   "devDependencies": {
@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "fs-extra": "3.0.0",
-    "inquirer": "3.0.6",
     "mime-types": "2.1.15",
     "mkdirp": "0.5.1",
     "pkg-conf": "^2.1.0",
