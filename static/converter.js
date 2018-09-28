@@ -40,7 +40,7 @@ function readSource({ sources, indexFile }, filename) {
       const isIndexFile = relativePath === indexFile;
 
       return Promise.resolve({
-        urlPath: isIndexFile ? '' : relativePath,
+        urlPath: isIndexFile ? '' : relativePath.replace('\\', '/'),
         contentType: mime.contentType(path.extname(filename)) || 'application/octet-stream',
         name: `static_${isIndexFile ? 'index' : relativePath.toLowerCase().replace(/[^\w+$]/gi, '_')}`,
         payloads: chunks.map((chunk, index) =>
