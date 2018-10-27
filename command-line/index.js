@@ -112,7 +112,6 @@ if (action === 'upload' || action === 'verify') {
 }
 
 const ideProcess = spawn(idePath, args);
-ideProcess.stdout.on('data', chunk => console.log(chunk.toString('utf8'))); // eslint-disable-line no-console
-ideProcess.stderr.on('data', chunk => console.error(chunk.toString('utf8'))); // eslint-disable-line no-console
-
+ideProcess.stdout.pipe(process.stdout);
+ideProcess.stderr.pipe(process.stderr);
 process.on('exit', () => ideProcess.kill());
