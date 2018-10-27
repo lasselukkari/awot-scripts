@@ -43,8 +43,11 @@ function readSource({ sources, indexFile }, filename) {
         urlPath: isIndexFile ? '' : relativePath.replace(/\\/g, '/'),
         contentType: mime.contentType(path.extname(filename)) || 'application/octet-stream',
         name: `static_${isIndexFile ? 'index' : relativePath.toLowerCase().replace(/[^\w+$]/gi, '_')}`,
-        payloads: chunks.map((chunk, index) =>
-          ({ chunkData: toHexPayload(chunk), chunkLength: chunk.length, chunkPart: index })),
+        payloads: chunks.map((chunk, index) => ({
+          chunkData: toHexPayload(chunk),
+          chunkLength: chunk.length,
+          chunkPart: index,
+        })),
         length: zipped.length,
         cacheControl: isIndexFile ? 'no-cache' : 'public, max-age=31536000',
       });
@@ -75,7 +78,9 @@ function getSourcesFiles({ sources, exclude }) {
   });
 }
 
-function renderAsset({ name, contentType, payloads, length, cacheControl }) {
+function renderAsset({
+  name, contentType, payloads, length, cacheControl,
+}) {
   return `void ${name} (Request &req, Response &res) {
 ${payloads.map(({ chunkData, chunkPart }) => `  P(${name}_${chunkPart}) = {\n   ${chunkData}  };`).join('\n')}
 
