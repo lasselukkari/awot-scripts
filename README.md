@@ -42,7 +42,7 @@ Add config to the root level of `package.json` and `awot-command-line` script to
 ```json
 {
  "awot-command-line": {
-    "sketch": "DuinoDCX/DuinoDCX.ino",
+    "sketch": "SketchName/SketchName.ino",
     "idePath": "/Applications/Arduino.app/Contents/MacOS/arduino",
     "port": "/dev/cu.Repleo-PL2303-00002014",
     "board": {
