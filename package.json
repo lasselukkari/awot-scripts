@@ -1,6 +1,6 @@
 {
   "name": "awot-scripts",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "",
   "main": "index.js",
   "devDependencies": {
@@ -20,7 +20,8 @@
     "lint:fix": "xo --fix"
   },
   "bin": {
-    "awot-static": "./static/index.js"
+    "awot-static": "./static/index.js",
+    "awot-command-line": "./command-line/index.js"
   },
   "repository": {
     "type": "git",
