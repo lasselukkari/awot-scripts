@@ -4,7 +4,6 @@ const path = require('path');
 const { spawn } = require('child_process');
 const pkgConf = require('pkg-conf');
 
-
 const defaults = { idePath: '/Applications/Arduino.app/Contents/MacOS/arduino' };
 const pkgOptions = pkgConf.sync('awot-command-line');
 const { extensions = {} } = pkgOptions;
