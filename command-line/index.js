@@ -4,9 +4,20 @@ const path = require('path');
 const { spawn } = require('child_process');
 const pkgConf = require('pkg-conf');
 
-const pkgOptions = pkgConf.sync('awot-command-line');
+
 const defaults = { idePath: '/Applications/Arduino.app/Contents/MacOS/arduino' };
-const options = Object.assign(defaults, pkgOptions);
+const pkgOptions = pkgConf.sync('awot-command-line');
+const { extensions = {} } = pkgOptions;
+const extensionName = process.argv[2];
+let extension = extensions[extensionName];
+
+if (extensionName && !extension) {
+  throw new Error(`Extensions ${extensionName} not found`);
+} else {
+  extension = {};
+}
+
+const options = Object.assign(defaults, pkgOptions, extension);
 const {
   action,
   board,

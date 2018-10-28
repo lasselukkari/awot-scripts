@@ -60,6 +60,36 @@ Add config to the root level of `package.json` and `awot-command-line` script to
 
 Execute the script by running `npm run awot-command-line`.
 
+The options can also be extended:
+```json
+{
+  "awot-command-line": {
+    "sketch": "DuinoDCX/DuinoDCX.ino",
+    "idePath": "/Applications/Arduino.app/Contents/MacOS/arduino",
+    "port": "/dev/cu.Repleo-PL2303-00002014",
+    "board": {
+      "package": "esp32",
+      "arch": "esp32",
+      "board": "esp32"
+    },
+    "extensions": {
+      "upload": {
+        "action": "upload"
+      },
+      "verify": {
+        "action": "verify"
+      }
+    }
+  },
+  "scripts": {
+     "upload": "awot-command-line upload",
+     "verify": "awot-command-line verify"
+  }
+}
+```
+
+Execute the scripts by running `npm run upload` and `npm run verify`.
+
 ### Options
 Options are defined in the `package.json` file under the `awot-command-line` key.
 
