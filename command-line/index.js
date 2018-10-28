@@ -13,7 +13,7 @@ let extension = extensions[extensionName];
 
 if (extensionName && !extension) {
   throw new Error(`Extensions ${extensionName} not found`);
-} else {
+} else if (!extensionName) {
   extension = {};
 }
 
