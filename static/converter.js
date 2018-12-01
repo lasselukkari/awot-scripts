@@ -98,13 +98,16 @@ ${payloads.map(({ chunkLength, chunkPart }) => `  res.writeP(${name}_${chunkPart
 function renderRouter(sourceOptions) {
   return `
 
-void ServeStatic(WebApp* app) {
-${sourceOptions.map(({ urlPath, name }) => `  app->get("${urlPath}", &${name});`).join('\n')}
+Router staticFileRouter("/");
+
+Router * staticFiles(){
+${sourceOptions.map(({ urlPath, name }) => `  staticFileRouter.get("${urlPath}", &${name});`).join('\n')}
+  return &staticFileRouter;
 }`;
 }
 
 function generatePayloads({ sketchDir }, sourceOptions) {
-  const destination = `${sketchDir}/StaticFiles.h`;
+  const destination = `${sketchDir}/StaticFiles.ino`;
   const payloads = sourceOptions.map(renderAsset).join('\n\n');
   const router = renderRouter(sourceOptions);
 
