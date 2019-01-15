@@ -20,8 +20,9 @@
     "lint:fix": "xo --fix"
   },
   "bin": {
-    "awot-static": "./static/index.js",
-    "awot-command-line": "./command-line/index.js"
+    "awot-command-line": "./command-line/index.js",
+    "awot-create": "./crete/index.js",
+    "awot-static": "./static/index.js"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,9 @@
   "homepage": "https://github.com/lasselukkari/awot-scripts#readme",
   "xo": {
     "extends": "eslint-config-airbnb-base",
-    "space": true
+    "space": true,
+    "rules": {
+      "no-console": "off"
+    }
   }
 }

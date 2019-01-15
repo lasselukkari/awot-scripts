@@ -1,7 +1,7 @@
 const path = require('path');
 const zlib = require('zlib');
 
-const fsp = require('fs-extra');
+const fs = require('fs-extra');
 const mkdirp = require('mkdirp');
 const mime = require('mime-types');
 const recursive = require('recursive-readdir');
@@ -32,7 +32,7 @@ function makeChunks(buffer, chunkSize) {
 }
 
 function readSource({ sources, indexFile }, filename) {
-  return fsp.readFile(filename, { encoding: null })
+  return fs.readFile(filename, { encoding: null })
     .then((fileData) => {
       const zipped = zlib.gzipSync(fileData);
       const relativePath = path.relative(sources, filename);
@@ -61,7 +61,7 @@ function writeFile(filename, contents) {
         reject(err);
       }
 
-      return resolve(fsp.writeFile(filename, contents));
+      return resolve(fs.writeFile(filename, contents));
     });
   });
 }
