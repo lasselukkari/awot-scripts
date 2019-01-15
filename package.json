@@ -21,7 +21,7 @@
   },
   "bin": {
     "awot-command-line": "./command-line/index.js",
-    "awot-create": "./crete/index.js",
+    "awot-create": "./create/index.js",
     "awot-static": "./static/index.js"
   },
   "repository": {
