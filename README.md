@@ -33,6 +33,11 @@ Execute the script by running `npm run awot-static`.
 
 This will generate a static gzipped payload file `StaticFiles.ino` to the `sketchDir` directory. To mount the http handlers call `app.use(staticFiles());`.
 
+## awot-create
+Creates a boilerplate Arduino project for the [aWOT web server](https://github.com/lasselukkari/aWOT) library.
+
+Execute the script by running `npx run awot-create ProjectName Wifi|Ethernet`. Defaults to Wifi.
+
 ## awot-commmand-line
 Control Arduino IDE command line interface using config defined in `package.json` file.
 

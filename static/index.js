@@ -6,7 +6,7 @@ const convert = require('./converter');
 const packageConfig = pkgConf.sync('awot-static');
 
 if (packageConfig.sources && packageConfig.indexFile && packageConfig.sketchDir) {
-  convert(packageConfig).catch(console.error); // eslint-disable-line no-console
+  convert(packageConfig).catch(console.error);
 } else {
-  console.error('No config found'); // eslint-disable-line no-console
+  console.error(new Error('No config found'));
 }
