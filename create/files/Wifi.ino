@@ -9,20 +9,20 @@ WebApp app;
 
 void setup() {
   Serial.begin(115200);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-
   Serial.println(WiFi.localIP());
 
   app.use(staticFiles());
+
   server.begin();
 }
 
-void loop(){
+void loop() {
   WiFiClient client = server.available();
 
   if (client.connected()) {
