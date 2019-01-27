@@ -7,18 +7,20 @@ EthernetServer server(80);
 WebApp app;
 
 void setup() {
+  Serial.begin(115200);
+
   while (!Ethernet.begin(mac)) {
     delay(500);
     Serial.print(".");
   }
-
   Serial.println(Ethernet.localIP());
 
   app.use(staticFiles());
+
   server.begin();
 }
 
-void loop(){
+void loop() {
   EthernetClient client = server.available();
 
   if (client.connected()) {
