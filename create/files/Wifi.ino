@@ -17,7 +17,7 @@ void setup() {
   }
   Serial.println(WiFi.localIP());
 
-  app.use(staticFiles());
+  app.route(staticFiles());
 
   server.begin();
 }

@@ -84,13 +84,13 @@ function renderAsset({
   return `void ${name} (Request &req, Response &res) {
 ${payloads.map(({ chunkData, chunkPart }) => `  P(${name}_${chunkPart}) = {\n   ${chunkData}  };`).join('\n')}
 
+  res.set("Content-Type", "${contentType}");
   res.set("Content-Encoding", "gzip");
   res.set("Cache-Control", "${cacheControl}");
   res.set("Content-Length", "${length}");
   res.set("Last-Modified", "${runDate.toUTCString()}");
   res.set("Vary", "Accept-Encoding");
 
-  res.success("${contentType}");
 ${payloads.map(({ chunkLength, chunkPart }) => `  res.writeP(${name}_${chunkPart}, ${chunkLength});`).join('\n')}
 }`;
 }
