@@ -9,7 +9,7 @@ void static_index(Request &req, Response &res) {
     "</body>\n"
     "</html>";
 
-  res.success("text/html");
+  res.set("Content-Type", "text/html");
   res.printP(index);
 }
 
