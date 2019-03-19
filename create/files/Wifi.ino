@@ -5,7 +5,7 @@
 #define WIFI_PASSWORD "password"
 
 WiFiServer server(80);
-WebApp app;
+Application app;
 
 void setup() {
   Serial.begin(115200);
