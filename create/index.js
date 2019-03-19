@@ -8,7 +8,7 @@ const https = require('https');
 const projectName = process.argv[2];
 const library = process.argv[3] || 'Wifi';
 
-const awotRoot = 'https://raw.githubusercontent.com/lasselukkari/aWOT/master/src';
+const awotRoot = 'https://raw.githubusercontent.com/lasselukkari/aWOT/master/src/';
 const cppFileName = 'aWOT.cpp';
 const hFileName = 'aWOT.h';
 
