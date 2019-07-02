@@ -4,20 +4,22 @@
   "description": "",
   "main": "index.js",
   "devDependencies": {
-    "eslint": "^5.8.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "xo": "^0.23.0"
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "jest": "^24.8.0",
+    "xo": "^0.24.0"
   },
   "dependencies": {
-    "fs-extra": "3.0.0",
-    "mime-types": "2.1.15",
+    "fs-extra": "8.1.0",
+    "mime-types": "2.1.24",
     "mkdirp": "0.5.1",
-    "pkg-conf": "^2.1.0",
-    "recursive-readdir": "2.1.1"
+    "pkg-conf": "3.1.0",
+    "recursive-readdir": "2.2.2"
   },
   "scripts": {
     "lint": "xo",
-    "lint:fix": "xo --fix"
+    "lint:fix": "xo --fix",
+    "test": "jest"
   },
   "bin": {
     "awot-command-line": "./command-line/index.js",
@@ -40,6 +42,14 @@
   "homepage": "https://github.com/lasselukkari/awot-scripts#readme",
   "xo": {
     "extends": "eslint-config-airbnb-base",
+    "globals": [
+      "afterAll",
+      "beforeAll",
+      "describe",
+      "expect",
+      "jest",
+      "test"
+    ],
     "space": true,
     "rules": {
       "no-console": "off"

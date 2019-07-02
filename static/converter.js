@@ -39,7 +39,7 @@ function readSource({ sources, indexFile }, filename) {
       const chunks = makeChunks(zipped, 32767);
       const isIndexFile = relativePath === indexFile;
 
-      return Promise.resolve({
+      return {
         urlPath: isIndexFile ? '' : relativePath.replace(/\\/g, '/'),
         contentType: mime.contentType(path.extname(filename)) || 'application/octet-stream',
         name: `static_${isIndexFile ? 'index' : relativePath.toLowerCase().replace(/[^\w+$]/gi, '_')}`,
@@ -50,7 +50,7 @@ function readSource({ sources, indexFile }, filename) {
         })),
         length: zipped.length,
         cacheControl: isIndexFile ? 'no-cache' : 'public, max-age=31536000',
-      });
+      };
     });
 }
 

@@ -48,13 +48,13 @@ if (preferencesFile) {
       const boardParams = [board.package, board.arch];
 
       if (action === 'installBoards') {
-        if (board.version) { // eslint-disable-line max-depth
+        if (board.version) {
           boardParams.push(board.version);
         }
         args.push('--install-boards', board.join(':'));
       } else {
         boardParams.push(board.board);
-        if (board.parameters) { // eslint-disable-line max-depth
+        if (board.parameters) {
           boardParams.push(board.parameters);
         }
         args.push('--board', boardParams.join(':'));
