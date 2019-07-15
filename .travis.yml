@@ -1,3 +1,7 @@
 language: node_js
 node_js:
+<<<<<<< 72fff3529ddd43df850e70941ec3420ae40656a3:.travis.yml
   - "10"
+=======
+  - "6"
+>>>>>>> wip:travis.yml
