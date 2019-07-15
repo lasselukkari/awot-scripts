@@ -103,7 +103,8 @@ Router staticFileRouter("/");
 Router * staticFiles(){
 ${sourceOptions.map(({ urlPath, name }) => `  staticFileRouter.get("${urlPath}", &${name});`).join('\n')}
   return &staticFileRouter;
-}`;
+}
+`;
 }
 
 function generatePayloads({ sketchDir }, sourceOptions) {
