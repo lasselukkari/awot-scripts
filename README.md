@@ -1,4 +1,4 @@
-aWOT-scripts
+awot-scripts [![Build Status](https://travis-ci.org/lasselukkari/awot-scripts.svg?branch=master)](https://travis-ci.org/lasselukkari/awot-scripts)
 ============
 ## Installation
 ```bash
