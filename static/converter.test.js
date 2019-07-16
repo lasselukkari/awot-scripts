@@ -11,7 +11,7 @@ describe('Converter', () => {
   });
 
   afterAll(() => {
-    fs.unlinkSync(`${__dirname}/test-temp/StaticFiles.ino`);
+    fs.unlinkSync(`${__dirname}/test-temp/StaticFiles.h`);
     fs.rmdirSync(`${__dirname}/test-temp`);
   });
 
@@ -28,7 +28,7 @@ describe('Converter', () => {
       ],
     });
 
-    const result = fs.readFileSync(`${__dirname}/test-temp/StaticFiles.ino`, 'utf8');
+    const result = fs.readFileSync(`${__dirname}/test-temp/StaticFiles.h`, 'utf8');
     const darvinResult = fs.readFileSync(`${__dirname}/test-results/Darvin.ino`, 'utf8');
     const linuxResult = fs.readFileSync(`${__dirname}/test-results/Linux.ino`, 'utf8');
 

@@ -14,9 +14,9 @@ const hFileName = 'aWOT.h';
 
 const projectDir = path.join(process.cwd(), projectName, '/');
 const templateSketch = path.join(__dirname, 'files', `${library}.ino`);
-const templateFiles = path.join(__dirname, 'files', 'StaticFiles.ino');
+const templateFiles = path.join(__dirname, 'files', 'StaticFiles.h');
 const projectSketch = path.join(projectDir, `${projectName}.ino`);
-const projectFiles = path.join(projectDir, 'StaticFiles.ino');
+const projectFiles = path.join(projectDir, 'StaticFiles.h');
 const cppfile = path.join(projectDir, cppFileName);
 const hfile = path.join(projectDir, hFileName);
 

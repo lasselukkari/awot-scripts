@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include "aWOT.h"
+#include "StaticFiles.h"
 
 #define WIFI_SSID "network"
 #define WIFI_PASSWORD "password"
