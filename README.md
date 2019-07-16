@@ -31,7 +31,7 @@ Add config to the root level of `package.json` and `awot-static` script to the `
 
 Execute the script by running `npm run awot-static`.
 
-This will generate a static gzipped payload file `StaticFiles.ino` to the `sketchDir` directory. To mount the http handlers call `app.use(staticFiles());`.
+This will generate a static gzipped payload file `StaticFiles.h` to the `sketchDir` directory. Include the file with `#include "StaticFiles.h"` and to mount the http handlers call `app.use(staticFiles());`.
 
 ## awot-create
 Creates a boilerplate Arduino project for the [aWOT web server](https://github.com/lasselukkari/aWOT) library.
