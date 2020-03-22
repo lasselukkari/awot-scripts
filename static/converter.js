@@ -54,18 +54,6 @@ function readSource({ sources, indexFile }, filename) {
     });
 }
 
-function writeFile(filename, contents) {
-  return new Promise((resolve, reject) => {
-    mkdirp(path.dirname(filename), (err) => {
-      if (err) {
-        reject(err);
-      }
-
-      return resolve(fs.writeFile(filename, contents));
-    });
-  });
-}
-
 function getSourcesFiles({ sources, exclude }) {
   return new Promise((resolve, reject) => {
     recursive(sources, exclude, (err, files) => {
@@ -111,8 +99,10 @@ function generatePayloads({ sketchDir }, sourceOptions) {
   const destination = `${sketchDir}/StaticFiles.h`;
   const payloads = sourceOptions.map(renderAsset).join('\n\n');
   const router = renderRouter(sourceOptions);
+  const content = payloads + router;
 
-  return writeFile(destination, payloads + router);
+  return mkdirp(path.dirname(destination))
+    .then(() => fs.writeFile(destination, content));
 }
 
 function generateFiles(options) {
