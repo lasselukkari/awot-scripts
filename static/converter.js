@@ -12,10 +12,10 @@ function toHexPayload(data) {
   return data
     .toString('hex')
     .match(/.{1,2}/g)
-    .map(hex => ` 0x${hex}`)
+    .map((hex) => ` 0x${hex}`)
     .toString()
     .match(/.{1,72}/g)
-    .map(line => `${line}\n`)
+    .map((line) => `${line}\n`)
     .join('   ');
 }
 
@@ -117,8 +117,8 @@ function generatePayloads({ sketchDir }, sourceOptions) {
 
 function generateFiles(options) {
   return getSourcesFiles(options)
-    .then(filenames => Promise.all(filenames.map(filename => readSource(options, filename))))
-    .then(sourceOptions => generatePayloads(options, sourceOptions));
+    .then((filenames) => Promise.all(filenames.map((filename) => readSource(options, filename))))
+    .then((sourceOptions) => generatePayloads(options, sourceOptions));
 }
 
 module.exports = generateFiles;

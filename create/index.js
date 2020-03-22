@@ -43,5 +43,5 @@ if (fs.existsSync(projectDir)) {
   }).end();
 
   [cppStream, headerStream, cppRequest, headerRequest]
-    .forEach(emitter => emitter.on('error', console.error));
+    .forEach((emitter) => emitter.on('error', console.error));
 }
