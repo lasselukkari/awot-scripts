@@ -32,14 +32,14 @@ if (fs.existsSync(projectDir)) {
   const cppStream = fs.createWriteStream(cppfile);
   const headerStream = fs.createWriteStream(hfile);
 
-  const cppRequest = https.request(awotRoot + cppFileName, (res) => {
-    res.on('error', console.error);
-    res.pipe(cppStream);
+  const cppRequest = https.request(awotRoot + cppFileName, (response) => {
+    response.on('error', console.error);
+    response.pipe(cppStream);
   }).end();
 
-  const headerRequest = https.request(awotRoot + hFileName, (res) => {
-    res.on('error', console.error);
-    res.pipe(headerStream);
+  const headerRequest = https.request(awotRoot + hFileName, (response) => {
+    response.on('error', console.error);
+    response.pipe(headerStream);
   }).end();
 
   [cppStream, headerStream, cppRequest, headerRequest]

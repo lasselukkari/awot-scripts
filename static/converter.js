@@ -21,10 +21,10 @@ function toHexPayload(data) {
 
 function makeChunks(buffer, chunkSize) {
   const result = [];
-  const len = buffer.length;
+  const length = buffer.length;
   let i = 0;
 
-  while (i < len) {
+  while (i < length) {
     result.push(buffer.slice(i, i += chunkSize));
   }
 

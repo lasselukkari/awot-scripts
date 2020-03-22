@@ -45,19 +45,19 @@ if (preferencesFile) {
     if (!board.package || !board.arch || !board.board) {
       throw (new Error('One or more board parameters are missing'));
     } else {
-      const boardParams = [board.package, board.arch];
+      const boardParameters = [board.package, board.arch];
 
       if (action === 'installBoards') {
         if (board.version) {
-          boardParams.push(board.version);
+          boardParameters.push(board.version);
         }
         args.push('--install-boards', board.join(':'));
       } else {
-        boardParams.push(board.board);
+        boardParameters.push(board.board);
         if (board.parameters) {
-          boardParams.push(board.parameters);
+          boardParameters.push(board.parameters);
         }
-        args.push('--board', boardParams.join(':'));
+        args.push('--board', boardParameters.join(':'));
       }
     }
   }
@@ -101,23 +101,23 @@ if (action === 'upload' || action === 'verify') {
   }
 } else if (action === 'installLibrary') {
   if (libraries.length > 0) {
-    const installParams = [];
+    const installParameters = [];
 
     libraries.forEach((library) => {
       if (!library.name) {
         throw (new Error('Library name missing'));
       }
 
-      const libraryParams = [];
-      libraryParams.push(library.name);
+      const libraryParameters = [];
+      libraryParameters.push(library.name);
       if (library.version) {
-        libraryParams.push(library.version);
+        libraryParameters.push(library.version);
       }
 
-      installParams.push(library.join(':'));
+      installParameters.push(library.join(':'));
     });
 
-    args.push('--install-library', installParams.join(','));
+    args.push('--install-library', installParameters.join(','));
   }
 }
 
