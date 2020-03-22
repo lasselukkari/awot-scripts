@@ -32,7 +32,7 @@ describe('Converter', () => {
     const darvinResult = fs.readFileSync(`${__dirname}/test-results/Darvin.ino`, 'utf8');
     const linuxResult = fs.readFileSync(`${__dirname}/test-results/Linux.ino`, 'utf8');
 
-    const expectedResult = process.platform === 'darvin' ? darvinResult : linuxResult;
+    const expectedResult = process.platform === 'darwin' ? darvinResult : linuxResult;
 
     expect(result).toEqual(expectedResult);
   });
