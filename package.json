@@ -10,7 +10,7 @@
     "xo": "0.28.0"
   },
   "dependencies": {
-    "fs-extra": "8.1.0",
+    "fs-extra": "9.0.0",
     "mime-types": "2.1.26",
     "mkdirp": "1.0.3",
     "pkg-conf": "3.1.0",
