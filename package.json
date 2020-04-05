@@ -16,7 +16,7 @@
     "eslint": "6.8.0",
     "eslint-config-airbnb-base": "14.1.0",
     "jest": "25.2.7",
-    "xo": "0.28.2"
+    "xo": "0.28.3"
   },
   "dependencies": {
     "fs-extra": "9.0.0",
