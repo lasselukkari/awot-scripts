@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "fs-extra": "9.0.0",
-    "mime-types": "2.1.26",
+    "mime-types": "2.1.27",
     "mkdirp": "1.0.4",
     "pkg-conf": "3.1.0",
     "recursive-readdir": "2.2.2"
