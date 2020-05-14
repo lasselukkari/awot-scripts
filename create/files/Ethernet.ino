@@ -16,7 +16,7 @@ void setup() {
   }
   Serial.println(Ethernet.localIP());
 
-  app.route(staticFiles());
+  app.use(staticFiles());
 
   server.begin();
 }
