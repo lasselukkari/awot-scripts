@@ -36,7 +36,7 @@ This will generate a static gzipped payload file `StaticFiles.h` to the `sketchD
 ## awot-create
 Creates a boilerplate Arduino project for the [aWOT web server](https://github.com/lasselukkari/aWOT) library.
 
-Execute the script by running `npx run awot-create ProjectName Wifi|Ethernet`. Defaults to Wifi.
+Execute the script by running `npx awot-create ProjectName Wifi|Ethernet`. Defaults to Wifi.
 
 ## awot-commmand-line
 Control Arduino IDE command line interface using config defined in `package.json` file.
