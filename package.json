@@ -13,7 +13,7 @@
     "static/index.js"
   ],
   "devDependencies": {
-    "eslint": "7.1.0",
+    "eslint": "7.2.0",
     "eslint-config-airbnb-base": "14.1.0",
     "jest": "26.0.1",
     "xo": "0.32.0"
