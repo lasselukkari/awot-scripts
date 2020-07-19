@@ -19,9 +19,9 @@ void static_index (Request &req, Response &res) {
   res.writeP(static_index_0, 83);
 }
 
-Router staticFileRouter("/");
+Router staticFileRouter;
 
 Router * staticFiles(){
-  staticFileRouter.get("", &static_index);
+  staticFileRouter.get("/", &static_index);
   return &staticFileRouter;
 }

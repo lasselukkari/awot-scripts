@@ -86,10 +86,10 @@ ${payloads.map(({ chunkLength, chunkPart }) => `  res.writeP(${name}_${chunkPart
 function renderRouter(sourceOptions) {
   return `
 
-Router staticFileRouter("/");
+Router staticFileRouter;
 
 Router * staticFiles(){
-${sourceOptions.map(({ urlPath, name }) => `  staticFileRouter.get("${urlPath}", &${name});`).join('\n')}
+${sourceOptions.map(({ urlPath, name }) => `  staticFileRouter.get("/${urlPath}", &${name});`).join('\n')}
   return &staticFileRouter;
 }
 `;
