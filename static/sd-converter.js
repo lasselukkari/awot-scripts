@@ -52,7 +52,7 @@ function readSource({ sources, indexFile }, filename) {
   };
 }
 
-function getSourcesFiles({ sources, exclude }) {
+function getSourcesFiles({ sources, exclude = [] }) {
   return new Promise((resolve, reject) => {
     recursive(sources, exclude, (err, files) => {
       if (err) {
