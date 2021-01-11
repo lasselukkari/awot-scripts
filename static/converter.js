@@ -97,7 +97,7 @@ ${sourceOptions.map(({ urlPath, name }) => `  staticFileRouter.get("/${urlPath}"
 }
 
 function generatePayloads({ sketchDir }, sourceOptions) {
-  const destination = `${sketchDir}/StaticFiles.h`;
+  const destination = path.join(sketchDir, 'StaticFiles.h');
   const payloads = sourceOptions.map((options) => renderAsset(options)).join('\n\n');
   const router = renderRouter(sourceOptions);
   const content = payloads + router;
