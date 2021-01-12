@@ -10,7 +10,9 @@
     "create/files/Wifi.ino",
     "create/index.js",
     "static/converter.js",
-    "static/index.js"
+    "static/index.js",
+    "static/perfect-hash.js",
+    "static/sd-converter.js"
   ],
   "devDependencies": {
     "eslint": "7.4.0",
