@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 describe('Converter', () => {
   beforeAll(() => {
@@ -11,10 +12,9 @@ describe('Converter', () => {
   });
 
   afterAll(() => {
-    fs.unlinkSync(`${__dirname}/test-temp/StaticFiles.h`);
-    fs.rmdirSync(`${__dirname}/test-temp`);
+    fs.unlinkSync(path.join(__dirname, 'test-temp', 'StaticFiles.h'));
+    fs.rmdirSync(path.join(__dirname, 'test-temp'));
   });
-
 
   test('Produces the expected output', async () => {
     await require('./converter')({ // eslint-disable-line global-require
@@ -28,9 +28,9 @@ describe('Converter', () => {
       ],
     });
 
-    const result = fs.readFileSync(`${__dirname}/test-temp/StaticFiles.h`, 'utf8');
-    const darvinResult = fs.readFileSync(`${__dirname}/test-results/Darvin.ino`, 'utf8');
-    const linuxResult = fs.readFileSync(`${__dirname}/test-results/Linux.ino`, 'utf8');
+    const result = fs.readFileSync(path.join(__dirname, 'test-temp', 'StaticFiles.h'), 'utf8');
+    const darvinResult = fs.readFileSync(path.join(__dirname, 'test-results', 'Darvin.ino'), 'utf8');
+    const linuxResult = fs.readFileSync(path.join(__dirname, 'test-results', 'Linux.ino'), 'utf8');
 
     const expectedResult = process.platform === 'darwin' ? darvinResult : linuxResult;
 

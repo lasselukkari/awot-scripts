@@ -38,9 +38,10 @@ function readSource({ sources, indexFile }, filename) {
       const relativePath = path.relative(sources, filename);
       const chunks = makeChunks(zipped, 32767);
       const isIndexFile = relativePath === indexFile;
+      const urlPath = isIndexFile ? '' : relativePath.replace(/\\/g, '/');
 
       return {
-        urlPath: isIndexFile ? '' : relativePath.replace(/\\/g, '/'),
+        urlPath: encodeURI(urlPath),
         contentType: mime.contentType(path.extname(filename)) || 'application/octet-stream',
         name: `static_${isIndexFile ? 'index' : relativePath.toLowerCase().replace(/[^\w+$]/gi, '_')}`,
         payloads: chunks.map((chunk, index) => ({
@@ -54,7 +55,7 @@ function readSource({ sources, indexFile }, filename) {
     });
 }
 
-function getSourcesFiles({ sources, exclude }) {
+function getSourcesFiles({ sources, exclude = [] }) {
   return new Promise((resolve, reject) => {
     recursive(sources, exclude, (err, files) => {
       if (err) {
@@ -96,8 +97,8 @@ ${sourceOptions.map(({ urlPath, name }) => `  staticFileRouter.get("/${urlPath}"
 }
 
 function generatePayloads({ sketchDir }, sourceOptions) {
-  const destination = `${sketchDir}/StaticFiles.h`;
-  const payloads = sourceOptions.map(renderAsset).join('\n\n');
+  const destination = path.join(sketchDir, 'StaticFiles.h');
+  const payloads = sourceOptions.map((options) => renderAsset(options)).join('\n\n');
   const router = renderRouter(sourceOptions);
   const content = payloads + router;
 
