@@ -41,7 +41,7 @@ function readSource({ sources, indexFile }, filename) {
       const urlPath = isIndexFile ? '' : relativePath.replace(/\\/g, '/');
 
       return {
-        urlPath: encodeURI(urlPath),
+        urlPath,
         contentType: mime.contentType(path.extname(filename)) || 'application/octet-stream',
         name: `static_${isIndexFile ? 'index' : relativePath.toLowerCase().replace(/[^\w+$]/gi, '_')}`,
         payloads: chunks.map((chunk, index) => ({
