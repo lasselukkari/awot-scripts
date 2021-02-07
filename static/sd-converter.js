@@ -26,8 +26,7 @@ function readSource({ sources, indexFile }, filename) {
   const fileData = fs.readFileSync(filename, { encoding: null });
   const relativePath = path.relative(sources, filename);
   const isIndexFile = relativePath === indexFile;
-  const urlPath = isIndexFile ? '' : relativePath.replace(/\\/g, '/');
-  const encodedPath = `/${encodeURI(urlPath)}`;
+  const urlPath = `/${isIndexFile ? '' : relativePath.replace(/\\/g, '/')}`;
   const contentType = mime.contentType(path.extname(filename)) || 'application/octet-stream';
   const cacheControl = isIndexFile ? 'no-cache' : 'public, max-age=31536000';
   const body = zlib.gzipSync(fileData);
@@ -37,11 +36,11 @@ function readSource({ sources, indexFile }, filename) {
     contentType, contentLength, cacheControl, lastModified,
   });
   const length = contentLength + headers.length;
-  const hash = perfectHash.hash(encodedPath);
+  const hash = perfectHash.hash(urlPath);
 
   return {
     filename,
-    encodedPath,
+    urlPath,
     length,
     headers,
     hash,
@@ -76,9 +75,9 @@ function getOffsets(sourceOptions) {
 function createTables(sourceOptions) {
   const dictionary = {};
   sourceOptions.forEach(({
-    encodedPath, offset, hash, length,
+    urlPath, offset, hash, length,
   }) => {
-    dictionary[encodedPath] = { offset, hash, length };
+    dictionary[urlPath] = { offset, hash, length };
   });
 
   return perfectHash.create(dictionary);
