@@ -15,7 +15,7 @@
     "static/sd-converter.js"
   ],
   "devDependencies": {
-    "eslint": "7.4.0",
+    "eslint": "7.21.0",
     "eslint-config-airbnb-base": "14.2.0",
     "jest": "26.1.0",
     "xo": "0.32.1"
