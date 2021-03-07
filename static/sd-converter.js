@@ -9,21 +9,21 @@ const perfectHash = require('./perfect-hash');
 const runDate = new Date();
 
 function getHeaders({
-  contentType, contentLength, cacheControl, lastModified,
+  contentType, contentLength, cacheControl, lastModified
 }) {
   return Buffer.from(
-    `Content-Type: ${contentType}\r\n`
-    + 'Content-Encoding: gzip\r\n'
-    + `Cache-Control: ${cacheControl}\r\n`
-    + `Content-Length: ${contentLength}\r\n`
-    + `Last-Modified: ${lastModified}\r\n`
-    + 'Vary: Accept-Encoding\r\n'
-    + '\r\n',
+    `Content-Type: ${contentType}\r\n` +
+    'Content-Encoding: gzip\r\n' +
+    `Cache-Control: ${cacheControl}\r\n` +
+    `Content-Length: ${contentLength}\r\n` +
+    `Last-Modified: ${lastModified}\r\n` +
+    'Vary: Accept-Encoding\r\n' +
+    '\r\n'
   );
 }
 
-function readSource({ sources, indexFile }, filename) {
-  const fileData = fs.readFileSync(filename, { encoding: null });
+function readSource({sources, indexFile}, filename) {
+  const fileData = fs.readFileSync(filename, {encoding: null});
   const relativePath = path.relative(sources, filename);
   const isIndexFile = relativePath === indexFile;
   const urlPath = `/${isIndexFile ? '' : relativePath.replace(/\\/g, '/')}`;
@@ -33,7 +33,7 @@ function readSource({ sources, indexFile }, filename) {
   const contentLength = body.length;
   const lastModified = runDate.toUTCString();
   const headers = getHeaders({
-    contentType, contentLength, cacheControl, lastModified,
+    contentType, contentLength, cacheControl, lastModified
   });
   const length = contentLength + headers.length;
   const hash = perfectHash.hash(urlPath);
@@ -47,15 +47,15 @@ function readSource({ sources, indexFile }, filename) {
     contentType,
     contentLength,
     cacheControl,
-    lastModified,
+    lastModified
   };
 }
 
-function getSourcesFiles({ sources, exclude = [] }) {
+function getSourcesFiles({sources, exclude = []}) {
   return new Promise((resolve, reject) => {
-    recursive(sources, exclude, (err, files) => {
-      if (err) {
-        return reject(err);
+    recursive(sources, exclude, (error, files) => {
+      if (error) {
+        return reject(error);
       }
 
       return resolve(files);
@@ -65,52 +65,56 @@ function getSourcesFiles({ sources, exclude = [] }) {
 
 function getOffsets(sourceOptions) {
   let currentPosition = 4 + (sourceOptions.length * 16);
-  return sourceOptions.map((option) => {
+  return sourceOptions.map(option => {
     const offset = currentPosition;
     currentPosition += option.length;
-    return { offset, ...option };
+    return {offset, ...option};
   });
 }
 
 function createTables(sourceOptions) {
   const dictionary = {};
-  sourceOptions.forEach(({
-    urlPath, offset, hash, length,
-  }) => {
-    dictionary[urlPath] = { offset, hash, length };
-  });
+
+  for (const {
+    urlPath, offset, hash, length
+  } of sourceOptions) {
+    dictionary[urlPath] = {offset, hash, length};
+  }
 
   return perfectHash.create(dictionary);
 }
 
-async function generatePayloads({ sketchDir }, sourceOptions) {
+async function generatePayloads({sketchDir}, sourceOptions) {
   const dataFile = `${sketchDir}/static.bin`;
   const offsettedOptions = getOffsets(sourceOptions);
   const tables = createTables(offsettedOptions);
 
   await mkdirp(path.dirname(dataFile));
 
-  const binaryStream = fs.createWriteStream(dataFile, { encoding: 'binary' });
+  const binaryStream = fs.createWriteStream(dataFile, {encoding: 'binary'});
 
   binaryStream.write(Buffer.from(Uint32Array.from([sourceOptions.length]).buffer));
   binaryStream.write(Buffer.from(Int32Array.from(tables[0]).buffer));
-  tables[1].forEach(({ offset, hash, length }) => {
-    binaryStream.write(Buffer.from(Uint32Array.from([hash, offset, length]).buffer));
-  });
 
-  offsettedOptions.forEach((options) => {
-    const data = fs.readFileSync(options.filename, { encoding: null });
+  for (const {
+    offset, hash, length
+  } of tables[1]) {
+    binaryStream.write(Buffer.from(Uint32Array.from([hash, offset, length]).buffer));
+  }
+
+  for (const options of offsettedOptions) {
+    const data = fs.readFileSync(options.filename, {encoding: null});
     const body = zlib.gzipSync(data);
     const headers = getHeaders(options);
     binaryStream.write(headers);
     binaryStream.write(body);
-  });
+  }
 }
 
 function generateFiles(options) {
   return getSourcesFiles(options)
-    .then((filenames) => Promise.all(filenames.map((filename) => readSource(options, filename))))
-    .then((sourceOptions) => generatePayloads(options, sourceOptions));
+    .then(filenames => Promise.all(filenames.map(filename => readSource(options, filename))))
+    .then(sourceOptions => generatePayloads(options, sourceOptions));
 }
 
 module.exports = generateFiles;

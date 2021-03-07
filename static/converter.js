@@ -12,10 +12,10 @@ function toHexPayload(data) {
   return data
     .toString('hex')
     .match(/.{1,2}/g)
-    .map((hex) => ` 0x${hex}`)
+    .map(hex => ` 0x${hex}`)
     .toString()
     .match(/.{1,72}/g)
-    .map((line) => `${line}\n`)
+    .map(line => `${line}\n`)
     .join('   ');
 }
 
@@ -31,9 +31,9 @@ function makeChunks(buffer, chunkSize) {
   return result;
 }
 
-function readSource({ sources, indexFile }, filename) {
-  return fs.readFile(filename, { encoding: null })
-    .then((fileData) => {
+function readSource({sources, indexFile}, filename) {
+  return fs.readFile(filename, {encoding: null})
+    .then(fileData => {
       const zipped = zlib.gzipSync(fileData);
       const relativePath = path.relative(sources, filename);
       const chunks = makeChunks(zipped, 32767);
@@ -47,19 +47,19 @@ function readSource({ sources, indexFile }, filename) {
         payloads: chunks.map((chunk, index) => ({
           chunkData: toHexPayload(chunk),
           chunkLength: chunk.length,
-          chunkPart: index,
+          chunkPart: index
         })),
         length: zipped.length,
-        cacheControl: isIndexFile ? 'no-cache' : 'public, max-age=31536000',
+        cacheControl: isIndexFile ? 'no-cache' : 'public, max-age=31536000'
       };
     });
 }
 
-function getSourcesFiles({ sources, exclude = [] }) {
+function getSourcesFiles({sources, exclude = []}) {
   return new Promise((resolve, reject) => {
-    recursive(sources, exclude, (err, files) => {
-      if (err) {
-        return reject(err);
+    recursive(sources, exclude, (error, files) => {
+      if (error) {
+        return reject(error);
       }
 
       return resolve(files);
@@ -68,10 +68,10 @@ function getSourcesFiles({ sources, exclude = [] }) {
 }
 
 function renderAsset({
-  name, contentType, payloads, length, cacheControl,
+  name, contentType, payloads, length, cacheControl
 }) {
   return `void ${name} (Request &req, Response &res) {
-${payloads.map(({ chunkData, chunkPart }) => `  P(${name}_${chunkPart}) = {\n   ${chunkData}  };`).join('\n')}
+${payloads.map(({chunkData, chunkPart}) => `  P(${name}_${chunkPart}) = {\n   ${chunkData}  };`).join('\n')}
 
   res.set("Content-Type", "${contentType}");
   res.set("Content-Encoding", "gzip");
@@ -80,7 +80,7 @@ ${payloads.map(({ chunkData, chunkPart }) => `  P(${name}_${chunkPart}) = {\n   
   res.set("Last-Modified", "${runDate.toUTCString()}");
   res.set("Vary", "Accept-Encoding");
 
-${payloads.map(({ chunkLength, chunkPart }) => `  res.writeP(${name}_${chunkPart}, ${chunkLength});`).join('\n')}
+${payloads.map(({chunkLength, chunkPart}) => `  res.writeP(${name}_${chunkPart}, ${chunkLength});`).join('\n')}
 }`;
 }
 
@@ -90,15 +90,15 @@ function renderRouter(sourceOptions) {
 Router staticFileRouter;
 
 Router * staticFiles(){
-${sourceOptions.map(({ urlPath, name }) => `  staticFileRouter.get("/${urlPath}", &${name});`).join('\n')}
+${sourceOptions.map(({urlPath, name}) => `  staticFileRouter.get("/${urlPath}", &${name});`).join('\n')}
   return &staticFileRouter;
 }
 `;
 }
 
-function generatePayloads({ sketchDir }, sourceOptions) {
+function generatePayloads({sketchDir}, sourceOptions) {
   const destination = path.join(sketchDir, 'StaticFiles.h');
-  const payloads = sourceOptions.map((options) => renderAsset(options)).join('\n\n');
+  const payloads = sourceOptions.map(options => renderAsset(options)).join('\n\n');
   const router = renderRouter(sourceOptions);
   const content = payloads + router;
 
@@ -108,8 +108,8 @@ function generatePayloads({ sketchDir }, sourceOptions) {
 
 function generateFiles(options) {
   return getSourcesFiles(options)
-    .then((filenames) => Promise.all(filenames.map((filename) => readSource(options, filename))))
-    .then((sourceOptions) => generatePayloads(options, sourceOptions));
+    .then(filenames => Promise.all(filenames.map(filename => readSource(options, filename))))
+    .then(sourceOptions => generatePayloads(options, sourceOptions));
 }
 
 module.exports = generateFiles;

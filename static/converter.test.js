@@ -17,15 +17,15 @@ describe('Converter', () => {
   });
 
   test('Produces the expected output', async () => {
-    await require('./converter')({ // eslint-disable-line global-require
+    await require('./converter')({
       sources: './static/test-input',
       indexFile: 'converter.test.html',
       sketchDir: './static/test-temp',
       exclude: [
         'converter.js',
         'converter.test.js',
-        'index.js',
-      ],
+        'index.js'
+      ]
     });
 
     const result = fs.readFileSync(path.join(__dirname, 'test-temp', 'StaticFiles.h'), 'utf8');

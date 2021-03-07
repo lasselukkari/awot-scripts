@@ -15,8 +15,6 @@
     "static/sd-converter.js"
   ],
   "devDependencies": {
-    "eslint": "7.21.0",
-    "eslint-config-airbnb-base": "14.2.0",
     "jest": "26.1.0",
     "xo": "0.38.2"
   },
@@ -52,7 +50,6 @@
   },
   "homepage": "https://github.com/lasselukkari/awot-scripts#readme",
   "xo": {
-    "extends": "eslint-config-airbnb-base",
     "globals": [
       "afterAll",
       "beforeAll",

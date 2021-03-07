@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const {spawn} = require('child_process');
 const pkgConf = require('pkg-conf');
 
-const defaults = { idePath: '/Applications/Arduino.app/Contents/MacOS/arduino' };
+const defaults = {idePath: '/Applications/Arduino.app/Contents/MacOS/arduino'};
 const pkgOptions = pkgConf.sync('awot-command-line');
-const { extensions = {} } = pkgOptions;
+const {extensions = {}} = pkgOptions;
 const extensionName = process.argv[2];
 let extension = extensions[extensionName];
 
@@ -30,7 +30,7 @@ const {
   libraries,
   savePrefs,
   preserveTempFiles,
-  idePath,
+  idePath
 } = options;
 const args = [];
 
@@ -51,12 +51,14 @@ if (preferencesFile) {
         if (board.version) {
           boardParameters.push(board.version);
         }
+
         args.push('--install-boards', board.join(':'));
       } else {
         boardParameters.push(board.board);
         if (board.parameters) {
           boardParameters.push(board.parameters);
         }
+
         args.push('--board', boardParameters.join(':'));
       }
     }
@@ -99,26 +101,24 @@ if (action === 'upload' || action === 'verify') {
   if (preference) {
     args.push(preference);
   }
-} else if (action === 'installLibrary') {
-  if (libraries.length > 0) {
-    const installParameters = [];
+} else if (action === 'installLibrary' && libraries.length > 0) {
+  const installParameters = [];
 
-    libraries.forEach((library) => {
-      if (!library.name) {
-        throw (new Error('Library name missing'));
-      }
+  for (const library of libraries) {
+    if (!library.name) {
+      throw (new Error('Library name missing'));
+    }
 
-      const libraryParameters = [];
-      libraryParameters.push(library.name);
-      if (library.version) {
-        libraryParameters.push(library.version);
-      }
+    const libraryParameters = [];
+    libraryParameters.push(library.name);
+    if (library.version) {
+      libraryParameters.push(library.version);
+    }
 
-      installParameters.push(library.join(':'));
-    });
-
-    args.push('--install-library', installParameters.join(','));
+    installParameters.push(library.join(':'));
   }
+
+  args.push('--install-library', installParameters.join(','));
 }
 
 const ideProcess = spawn(idePath, args);
