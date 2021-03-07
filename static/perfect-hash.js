@@ -12,15 +12,15 @@ const hash = (string, seed = 0x811C9DC5) => {
   return value & 0x7FFFFFFF;
 };
 
-const create = (dict) => {
+const create = dict => {
   const size = Object.keys(dict).length;
   const buckets = [];
-  const table = new Array(size);
-  const values = new Array(size);
+  const table = Array.from({length: size});
+  const values = Array.from({length: size});
   let bucket;
   let bucketIndex;
 
-  Object.keys(dict).forEach((key) => {
+  for (const key of Object.keys(dict)) {
     const bkey = hash(key) % size;
 
     if (!buckets[bkey]) {
@@ -28,7 +28,7 @@ const create = (dict) => {
     }
 
     buckets[bkey].push(key);
-  });
+  }
 
   buckets.sort((a, b) => b.length - a.length);
 
@@ -62,7 +62,7 @@ const create = (dict) => {
 
     table[hash(bucket[0]) % size] = d;
 
-    for (const [i, element] of bucket.entries()) { // eslint-disable-line no-restricted-syntax
+    for (const [i, element] of bucket.entries()) {
       values[slots[i]] = dict[element];
     }
   }
@@ -86,7 +86,7 @@ const create = (dict) => {
     values[valueSlot] = dict[bucket[0]];
   }
 
-  return [Array.from(table, (item) => item || 0), values];
+  return [Array.from(table, item => item || 0), values];
 };
 
-module.exports = { create, hash };
+module.exports = {create, hash};

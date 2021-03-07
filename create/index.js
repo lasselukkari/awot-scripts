@@ -22,9 +22,7 @@ const hfile = path.join(projectDir, hFileName);
 
 if (fs.existsSync(projectDir)) {
   console.error(new Error(`Directory with the name ${projectName} already exists.`));
-} else if (!fs.existsSync(templateSketch)) {
-  console.error(new Error(`Library option ${library} does not exist.`));
-} else {
+} else if (fs.existsSync(templateSketch)) {
   fs.mkdirSync(projectDir);
   fs.copy(templateFiles, projectFiles).catch(console.error);
   fs.copy(templateSketch, projectSketch).catch(console.error);
@@ -32,16 +30,19 @@ if (fs.existsSync(projectDir)) {
   const cppStream = fs.createWriteStream(cppfile);
   const headerStream = fs.createWriteStream(hfile);
 
-  const cppRequest = https.request(awotRoot + cppFileName, (response) => {
+  const cppRequest = https.request(awotRoot + cppFileName, response => {
     response.on('error', console.error);
     response.pipe(cppStream);
   }).end();
 
-  const headerRequest = https.request(awotRoot + hFileName, (response) => {
+  const headerRequest = https.request(awotRoot + hFileName, response => {
     response.on('error', console.error);
     response.pipe(headerStream);
   }).end();
 
-  [cppStream, headerStream, cppRequest, headerRequest]
-    .forEach((emitter) => emitter.on('error', console.error));
+  for (const emitter of [cppStream, headerStream, cppRequest, headerRequest]) {
+    emitter.on('error', console.error);
+  }
+} else {
+  console.error(new Error(`Library option ${library} does not exist.`));
 }
