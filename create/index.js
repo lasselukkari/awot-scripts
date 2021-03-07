@@ -22,9 +22,7 @@ const hfile = path.join(projectDir, hFileName);
 
 if (fs.existsSync(projectDir)) {
   console.error(new Error(`Directory with the name ${projectName} already exists.`));
-} else if (!fs.existsSync(templateSketch)) {
-  console.error(new Error(`Library option ${library} does not exist.`));
-} else {
+} else if (fs.existsSync(templateSketch)) {
   fs.mkdirSync(projectDir);
   fs.copy(templateFiles, projectFiles).catch(console.error);
   fs.copy(templateSketch, projectSketch).catch(console.error);
@@ -45,4 +43,6 @@ if (fs.existsSync(projectDir)) {
   for (const emitter of [cppStream, headerStream, cppRequest, headerRequest]) {
     emitter.on('error', console.error);
   }
+} else {
+  console.error(new Error(`Library option ${library} does not exist.`));
 }

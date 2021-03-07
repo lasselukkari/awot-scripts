@@ -15,8 +15,8 @@ const hash = (string, seed = 0x811C9DC5) => {
 const create = dict => {
   const size = Object.keys(dict).length;
   const buckets = [];
-  const table = new Array(size);
-  const values = new Array(size);
+  const table = Array.from({length: size});
+  const values = Array.from({length: size});
   let bucket;
   let bucketIndex;
 
