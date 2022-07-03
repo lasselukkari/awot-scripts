@@ -12,10 +12,10 @@ function toHexPayload(data) {
   return data
     .toString('hex')
     .match(/.{1,2}/g)
-    .map(hex => ` 0x${hex}`)
+    .map((hex) => ` 0x${hex}`)
     .toString()
     .match(/.{1,72}/g)
-    .map(line => `${line}\n`)
+    .map((line) => `${line}\n`)
     .join('   ');
 }
 
@@ -31,9 +31,9 @@ function makeChunks(buffer, chunkSize) {
   return result;
 }
 
-function readSource({sources, indexFile}, filename) {
-  return fs.readFile(filename, {encoding: null})
-    .then(fileData => {
+function readSource({ sources, indexFile }, filename) {
+  return fs.readFile(filename, { encoding: null })
+    .then((fileData) => {
       const zipped = zlib.gzipSync(fileData);
       const relativePath = path.relative(sources, filename);
       const chunks = makeChunks(zipped, 32767);
@@ -47,19 +47,19 @@ function readSource({sources, indexFile}, filename) {
         payloads: chunks.map((chunk, index) => ({
           chunkData: toHexPayload(chunk),
           chunkLength: chunk.length,
-          chunkPart: index
+          chunkPart: index,
         })),
         length: zipped.length,
-        cacheControl: isIndexFile ? 'no-cache' : 'public, max-age=31536000'
+        cacheControl: isIndexFile ? 'no-cache' : 'public, max-age=31536000',
       };
     });
 }
 
-function getSourcesFiles({sources, exclude = []}) {
+function getSourcesFiles({ sources, exclude = [] }) {
   return new Promise((resolve, reject) => {
-    recursive(sources, exclude, (error, files) => {
-      if (error) {
-        return reject(error);
+    recursive(sources, exclude, (err, files) => {
+      if (err) {
+        return reject(err);
       }
 
       return resolve(files);
@@ -67,11 +67,17 @@ function getSourcesFiles({sources, exclude = []}) {
   });
 }
 
-function renderAsset({
-  name, contentType, payloads, length, cacheControl
+function renderAssetHeader({
+  name, contentType, payloads, length, cacheControl,
 }) {
-  return `void ${name} (Request &req, Response &res) {
-${payloads.map(({chunkData, chunkPart}) => `  P(${name}_${chunkPart}) = {\n   ${chunkData}  };`).join('\n')}
+  return `void ${name} (Request &req, Response &res);`;
+}
+
+function renderAsset({
+  name, contentType, payloads, length, cacheControl,
+}) {
+  return `void AwotPages::${name}(Request &req, Response &res) {
+${payloads.map(({ chunkData, chunkPart }) => `  P(${name}_${chunkPart}) = {\n   ${chunkData}  };`).join('\n')}
 
   res.set("Content-Type", "${contentType}");
   res.set("Content-Encoding", "gzip");
@@ -80,7 +86,7 @@ ${payloads.map(({chunkData, chunkPart}) => `  P(${name}_${chunkPart}) = {\n   ${
   res.set("Last-Modified", "${runDate.toUTCString()}");
   res.set("Vary", "Accept-Encoding");
 
-${payloads.map(({chunkLength, chunkPart}) => `  res.writeP(${name}_${chunkPart}, ${chunkLength});`).join('\n')}
+${payloads.map(({ chunkLength, chunkPart }) => `  res.writeP(${name}_${chunkPart}, ${chunkLength});`).join('\n')}
 }`;
 }
 
@@ -90,26 +96,57 @@ function renderRouter(sourceOptions) {
 Router staticFileRouter;
 
 Router * staticFiles(){
-${sourceOptions.map(({urlPath, name}) => `  staticFileRouter.get("/${urlPath}", &${name});`).join('\n')}
+${sourceOptions.map(({ urlPath, name }) => `  staticFileRouter.get("/${urlPath}", &AwotPages::${name});`).join('\n')}
   return &staticFileRouter;
 }
 `;
 }
 
-function generatePayloads({sketchDir}, sourceOptions) {
-  const destination = path.join(sketchDir, 'StaticFiles.h');
-  const payloads = sourceOptions.map(options => renderAsset(options)).join('\n\n');
-  const router = renderRouter(sourceOptions);
-  const content = payloads + router;
+function generatePayloads({ sketchDir }, sourceOptions) {
+  const destinationHeader = path.join(sketchDir, 'AwotPages.h');
+  const destinationCpp = path.join(sketchDir, 'AwotPages.cpp');
+  const contentHeader = `#ifndef STATIC_FILES_H_
+#define STATIC_FILES_H_
 
-  return mkdirp(path.dirname(destination))
-    .then(() => fs.writeFile(destination, content));
+#pragma once
+#include <aWOT.h>
+using namespace awot;
+namespace AwotPages{
+  /*generated source
+  static class AwotPages{
+    public:*/
+    ${sourceOptions.map((options) => renderAssetHeader(options)).join('\n    ')}
+    ${
+      renderRouter(sourceOptions)
+    }
+  /*};*/
+}
+  #endif`;
+  const contentCpp = `#ifndef STATIC_FILES_CPP_
+  #define STATIC_FILES_CPP_
+  
+  #pragma once
+  #include "AwotPages.h"
+  using namespace AwotPages;
+  using namespace awot;
+
+  ${
+    sourceOptions.map((options) => renderAsset(options)).join('\n\n')
+  }
+  #endif
+  `;
+
+  return mkdirp(path.dirname(sketchDir))
+    .then(() => Promise.all([
+      fs.writeFile(destinationHeader, contentHeader),
+      fs.writeFile(destinationCpp, contentCpp),
+    ]));
 }
 
 function generateFiles(options) {
   return getSourcesFiles(options)
-    .then(filenames => Promise.all(filenames.map(filename => readSource(options, filename))))
-    .then(sourceOptions => generatePayloads(options, sourceOptions));
+    .then((filenames) => Promise.all(filenames.map((filename) => readSource(options, filename))))
+    .then((sourceOptions) => generatePayloads(options, sourceOptions));
 }
 
 module.exports = generateFiles;
