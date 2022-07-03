@@ -107,10 +107,10 @@ function generatePayloads({ sketchDir }, sourceOptions) {
   const destinationCpp = path.join(sketchDir, 'AwotPages.cpp');
   const contentHeader = `#ifndef STATIC_FILES_H_
 #define STATIC_FILES_H_
-
-#pragma once
 #include "aWOT.h"
+
 using namespace awot;
+
 namespace AwotPages{
   /*generated source
   static class AwotPages{
@@ -125,8 +125,8 @@ namespace AwotPages{
   const contentCpp = `#ifndef STATIC_FILES_CPP_
   #define STATIC_FILES_CPP_
   
-  #pragma once
   #include "AwotPages.h"
+  
   using namespace AwotPages;
   using namespace awot;
 
