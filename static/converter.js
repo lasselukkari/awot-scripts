@@ -109,7 +109,7 @@ function generatePayloads({ sketchDir }, sourceOptions) {
 #define STATIC_FILES_H_
 
 #pragma once
-#include <aWOT.h>
+#include "aWOT.h"
 using namespace awot;
 namespace AwotPages{
   /*generated source
